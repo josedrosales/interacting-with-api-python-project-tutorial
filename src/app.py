@@ -61,5 +61,12 @@ plt.show()
 plt.savefig('scatter_plot.png')
 
 slope, intercept, r_value, p_value, std_err = linregress(df['Duración (minutos)'], df['Popularidad'])
-r_squared = r_value**2
-print(r_squared)
+r_squared = round(r_value**2,5)
+
+if r_squared < 0.5:
+
+    print('No existe relación lineal entre la duración de la canción y su popularidad')
+
+else:
+
+    print('Existe relación lineal entre la duración de la cancion y su popularidad')
