@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.stats import linregress
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
@@ -53,7 +54,12 @@ print(df.head(3))
 plt.figure(figsize = (10, 5))
 plt.scatter(df['Duración (minutos)'], df['Popularidad'], alpha=0.5)
 plt.title('Popularidad vs Duración')
-plt.xlabel('Popularidad')
-plt.ylabel('Duración (min)')
+plt.xlabel('Duración (min)')
+plt.ylabel('Popularidad')
 plt.grid(True)
 plt.show()
+plt.savefig('scatter_plot.png')
+
+slope, intercept, r_value, p_value, std_err = linregress(df['Duración (minutos)'], df['Popularidad'])
+r_squared = r_value**2
+print(r_squared)
