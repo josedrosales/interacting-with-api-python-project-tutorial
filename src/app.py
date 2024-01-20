@@ -1,15 +1,59 @@
-import os
-from sqlalchemy import create_engine
-import pandas as pd
 from dotenv import load_dotenv
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# load the .env file variables
+# Cargar variables de entorno desde el archivo .env
 load_dotenv()
 
-# 1) Connect to the database here using the SQLAlchemy's create_engine function
+# Acceder a las variables de entorno
+client_id = os.getenv("CLIENT_ID")
+client_secret = os.getenv("CLIENT_SECRET")
 
-# 2) Execute the SQL sentences to create your tables using the SQLAlchemy's execute function
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
-# 3) Execute the SQL sentences to insert your data using the SQLAlchemy's execute function
+auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 
-# 4) Use pandas to print one of the tables as dataframes using read_sql function
+
+instancia = spotipy.Spotify(auth_manager=auth_manager)
+
+artist_id = '0qHbO3z6lgLE6ZYCkQBo1K'
+
+
+top_tracks = instancia.artist_top_tracks(artist_id)
+
+
+data = []
+for track in top_tracks['tracks'][0:10]:
+    track_name = track['name']
+    popularity = track['popularity']
+    duration_ms = track['duration_ms']
+    duration_min = round(duration_ms / (60 * 1000),2)
+
+    data.append({
+        'Nombre de la canción': track_name,
+        'Popularidad': popularity,
+        'Duración (minutos)': duration_min
+    })
+
+# Crea un DataFrame de pandas
+df = pd.DataFrame(data)
+
+# Se ordena el dataframe por popularidad
+df = df.sort_values(by='Popularidad', ascending=False)
+
+#se muestra top 3 por popularidad
+
+print('El top 3 más popular es:')
+print(df.head(3))
+
+#Verificacion de relacion entre duracion y popularidad
+
+plt.figure(figsize = (10, 5))
+plt.scatter(df['Duración (minutos)'], df['Popularidad'], alpha=0.5)
+plt.title('Popularidad vs Duración')
+plt.xlabel('Popularidad')
+plt.ylabel('Duración (min)')
+plt.grid(True)
+plt.show()
