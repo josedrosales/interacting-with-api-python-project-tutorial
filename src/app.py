@@ -57,7 +57,7 @@ plt.title('Popularidad vs Duración')
 plt.xlabel('Duración (min)')
 plt.ylabel('Popularidad')
 plt.grid(True)
-plt.show(block=True)
+plt.show()
 
 
 slope, intercept, r_value, p_value, std_err = linregress(df['Duración (minutos)'], df['Popularidad'])
